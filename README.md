@@ -148,4 +148,4 @@ For further assistance, consult the documentation of each tool:
 ---
 
 By following the instructions in this README, you will be able to set up and use pre-commit hooks effectively to maintain code quality and consistency in your Django project.
-```
+
