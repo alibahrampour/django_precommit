@@ -19,22 +19,28 @@ The `black` and `pyupgrade` hooks are configured to run conditionally based on a
 
 1. **Clone the repository**:
 
+   ```bash
    git clone <your-repo-url>
    cd <your-repo-directory>
-   
+   ```
 
 2. **Install pre-commit**:
 
+   ```bash
    pip install pre-commit
+   ```
 
 3. **Install the pre-commit hooks**:
 
+   ```bash
    pre-commit install
+   ```
 
 4. **Make the custom script executable**:
 
+   ```bash
    chmod +x run_tools.sh
-   
+   ```
 
 ## Usage
 
@@ -51,9 +57,11 @@ The following hooks will run automatically on commit:
 
 To run the `black` and `pyupgrade` hooks, set the environment variable `RUN_TOOLS` to `true`:
 
+```bash
 export RUN_TOOLS=true
 git add .
 git commit -m "My commit message"
+```
 
 If the `RUN_TOOLS` environment variable is not set or is set to any value other than `true`, the `black` and `pyupgrade` hooks will be skipped.
 
@@ -63,6 +71,7 @@ If the `RUN_TOOLS` environment variable is not set or is set to any value other 
 
 This is the configuration file for pre-commit hooks:
 
+```yaml
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.1.0
@@ -99,12 +108,13 @@ repos:
         language: script
         types: [python]
         files: .*
-
+```
 
 ### `run_tools.sh`
 
 This is the custom script to conditionally run `black` and `pyupgrade`:
 
+```bash
 #!/bin/bash
 
 if [[ "$RUN_TOOLS" == "true" ]]; then
@@ -115,15 +125,15 @@ else
     echo "Skipping black and pyupgrade..."
     exit 0
 fi
-
+```
 
 ## Troubleshooting
 
 If you encounter issues with the pre-commit hooks, you can check the log file located at:
 
-
+```
 ~/.cache/pre-commit/pre-commit.log
-
+```
 
 For further assistance, consult the documentation of each tool:
 
@@ -135,8 +145,7 @@ For further assistance, consult the documentation of each tool:
 - [setup-cfg-fmt](https://github.com/cobrateam/setup-cfg-fmt)
 - [mypy](http://mypy-lang.org/)
 
-
+---
 
 By following the instructions in this README, you will be able to set up and use pre-commit hooks effectively to maintain code quality and consistency in your Django project.
-
-
+```
