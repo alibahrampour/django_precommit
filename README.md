@@ -1,151 +1,162 @@
-# Django Project with Pre-commit Hooks
+### README for Pre-commit Hooks in Django Project
 
-This project uses `pre-commit` hooks to enforce code quality and consistency. The configured hooks include `black`, `pyupgrade`, `flake8`, `reorder-python-imports`, `setup-cfg-fmt`, and `mypy`.
+This README provides instructions for setting up and using pre-commit hooks in your Django project. These configurations include various tools such as `flake8`, `reorder-python-imports`, `setup-cfg-fmt`, `mypy`, `black`, `isort`, `bandit`, `prettier`, and `shellcheck` to enhance code quality and security.
 
-## Pre-commit Hooks
+### Prerequisites
 
-- **black**: A code formatter that enforces style consistency.
-- **pyupgrade**: A tool that upgrades syntax for newer versions of Python.
-- **flake8**: A tool for checking the style and quality of Python code.
-- **reorder-python-imports**: Automatically sorts and organizes Python imports.
-- **setup-cfg-fmt**: Formats the `setup.cfg` file.
-- **mypy**: A static type checker for Python.
+Before getting started, ensure that the following tools are installed on your system:
 
-## Conditional Hooks
+- Python 3.x
+- pip
+- Node.js (for prettier)
+- shellcheck
 
-The `black` and `pyupgrade` hooks are configured to run conditionally based on an environment variable `RUN_TOOLS`.
+### Installing pre-commit
 
-## Installation
-
-1. **Clone the repository**:
-
-   ```bash
-   git clone <your-repo-url>
-   cd <your-repo-directory>
-   ```
-
-2. **Install pre-commit**:
-
-   ```bash
-   pip install pre-commit
-   ```
-
-3. **Install the pre-commit hooks**:
-
-   ```bash
-   pre-commit install
-   ```
-
-4. **Make the custom script executable**:
-
-   ```bash
-   chmod +x run_tools.sh
-   ```
-
-## Usage
-
-### Running All Hooks
-
-The following hooks will run automatically on commit:
-
-- `flake8`
-- `reorder-python-imports`
-- `setup-cfg-fmt`
-- `mypy`
-
-### Conditional Hooks
-
-To run the `black` and `pyupgrade` hooks, set the environment variable `RUN_TOOLS` to `true`:
-
+First, install the pre-commit tool:
 ```bash
-export RUN_TOOLS=true
-git add .
-git commit -m "My commit message"
+pip install pre-commit
 ```
 
-If the `RUN_TOOLS` environment variable is not set or is set to any value other than `true`, the `black` and `pyupgrade` hooks will be skipped.
+### Configuring pre-commit
 
-## Configuration
-
-### `.pre-commit-config.yaml`
-
-This is the configuration file for pre-commit hooks:
+Create a file named `.pre-commit-config.yaml` in the root of your project and add the following content:
 
 ```yaml
 repos:
-  - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.1.0
-    hooks:
-      - id: trailing-whitespace
-      - id: end-of-file-fixer
-      - id: check-yaml
-
-  - repo: https://github.com/pycqa/flake8
-    rev: 6.0.0
-    hooks:
-      - id: flake8
-
-  - repo: https://github.com/asottile/reorder_python_imports
-    rev: v2.8.0
-    hooks:
-      - id: reorder-python-imports
-
-  - repo: https://github.com/cobrateam/setup-cfg-fmt
-    rev: v1.20.0
-    hooks:
-      - id: setup-cfg-fmt
-
-  - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v0.812
-    hooks:
-      - id: mypy
-
   - repo: local
     hooks:
-      - id: run-tools
-        name: Run black and pyupgrade
-        entry: ./run_tools.sh
-        language: script
+      - id: flake8
+        name: flake8
+        entry: flake8
+        language: system
         types: [python]
-        files: .*
+
+      - id: reorder-python-imports
+        name: reorder-python-imports
+        entry: reorder-python-imports
+        language: system
+        types: [python]
+
+      - id: setup-cfg-fmt
+        name: setup-cfg-fmt
+        entry: setup-cfg-fmt
+        language: system
+        types: [python]
+
+      - id: mypy
+        name: mypy
+        entry: mypy
+        language: system
+        types: [python]
+
+      - id: black
+        name: black
+        entry: black
+        language: system
+        types: [python]
+
+      - id: isort
+        name: isort
+        entry: isort
+        language: system
+        types: [python]
+
+      - id: bandit
+        name: bandit
+        entry: bandit
+        language: system
+        types: [python]
+
+      - id: prettier
+        name: prettier
+        entry: prettier --write
+        language: system
+        types: [javascript, json, css, html, yaml]
+
+      - id: shellcheck
+        name: shellcheck
+        entry: shellcheck
+        language: system
+        types: [shell]
+        files: \.sh$
 ```
 
-### `run_tools.sh`
+### Installing Local Tools
 
-This is the custom script to conditionally run `black` and `pyupgrade`:
+Install the required local tools:
+```bash
+pip install flake8 reorder-python-imports setup-cfg-fmt mypy black isort bandit
+npm install --global prettier
+sudo apt-get install shellcheck
+```
+
+### Installing pre-commit hooks
+
+After configuring the `.pre-commit-config.yaml` file, install the hooks:
+```bash
+pre-commit install
+```
+
+### Using pre-commit hooks
+
+Each time you add changes to the repository and commit, the pre-commit hooks will automatically run. If any hook detects issues, the commit will be halted, and you'll need to fix the issues before committing again.
 
 ```bash
-#!/bin/bash
-
-if [[ "$RUN_TOOLS" == "true" ]]; then
-    echo "Running black and pyupgrade..."
-    black "$@"
-    pyupgrade "$@"
-else
-    echo "Skipping black and pyupgrade..."
-    exit 0
-fi
+git add .
+git commit -m "Your commit message"
 ```
 
-## Troubleshooting
+### Skipping pre-commit hooks
 
-If you encounter issues with the pre-commit hooks, you can check the log file located at:
-
+If you need to commit or push without running pre-commit hooks, use the `--no-verify` option:
+```bash
+git commit --no-verify -m "Your commit message"
+git push --no-verify origin your-branch-name
 ```
-~/.cache/pre-commit/pre-commit.log
+
+### Updating pre-commit hooks
+
+To update the pre-commit hooks to the latest versions, use the following command:
+```bash
+pre-commit autoupdate
 ```
 
-For further assistance, consult the documentation of each tool:
+### Conclusion
 
-- [pre-commit](https://pre-commit.com/)
-- [black](https://black.readthedocs.io/en/stable/)
-- [pyupgrade](https://github.com/asottile/pyupgrade)
-- [flake8](https://flake8.pycqa.org/en/latest/)
-- [reorder-python-imports](https://github.com/asottile/reorder_python_imports)
-- [setup-cfg-fmt](https://github.com/cobrateam/setup-cfg-fmt)
-- [mypy](http://mypy-lang.org/)
+### Skipping a Specific Hook
 
----
+To skip the execution of a particular hook, such as `flake8`, you can include the `SKIP` option in your commit command:
 
-By following the instructions in this README, you will be able to set up and use pre-commit hooks effectively to maintain code quality and consistency in your Django project.
+```bash
+SKIP=flake8 git commit -m "Your commit message"
+```
 
+This command tells Git to skip the `flake8` hook specifically for the current commit.
+
+### Running Pre-commit Hooks with Skip Option
+
+Alternatively, you can run all pre-commit hooks while skipping a specific one using the following command:
+
+```bash
+pre-commit run --all-files --skip flake8
+```
+
+This command executes all hooks configured in your `.pre-commit-config.yaml` file but skips the `flake8` hook.
+
+### Example Usage
+
+Here’s how you might use these commands in practice:
+
+1. **Committing with Skip Option**:
+   ```bash
+   git add .
+   SKIP=flake8 git commit -m "Your commit message"
+   ```
+
+2. **Running Pre-commit Hooks with Skip**:
+   ```bash
+   pre-commit run --all-files --skip flake8
+   ```
+
+By including these options, you can selectively bypass specific pre-commit hooks temporarily, ensuring flexibility in your development workflow. Include this information in your README to guide other contributors on how to manage hooks effectively during commits.
