@@ -3,7 +3,7 @@
 if [[ "$RUN_TOOLS" == "true" ]]; then
     echo "Running black and pyupgrade..."
     black "$@"
-    pyupgrade "$@"
+#    pyupgrade "$@"
 else
     echo "Skipping black and pyupgrade..."
     exit 0
